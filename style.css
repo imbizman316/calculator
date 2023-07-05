@@ -67,6 +67,10 @@ body {
     flex-direction: column;
 }
 
+.operators .numkey {
+    background-color: aqua;
+}
+
 .keyline {
     width: 100%;
     height: 100%;

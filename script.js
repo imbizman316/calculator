@@ -15,12 +15,20 @@ function detect() {
         displayValue += this.innerText;
         inputField.placeholder = displayValue;
         disassemble();
+
     } else if (this.innerText === "C") {
 
         displayValue = "";
         inputField.placeholder = 0;
+    
+    } else if (this.innerText === "+/-") {
+        console.log(displayValue);
 
-    } else {
+    } else if (this.innerText === ".") {
+        console.log(displayValue);
+    }
+    
+    else {
 
         displayValue += this.innerText;
         inputField.placeholder = displayValue;
@@ -30,6 +38,8 @@ function detect() {
 }
 
 function disassemble() {
+
+    console.log(displayValue);
 
     const operatorsList = ["/","*","-","+","="];
     let disasembleValue = displayValue.split("");
@@ -87,8 +97,15 @@ function calculate(disassembleList) {
         } 
     }
 
-    inputField.placeholder = total;
-    displayValue = "";
+    if (total.toString().length > 10) {
+        let rounded  = total.toFixed(10);
+        inputField.placeholder = rounded;
+    } else {
+        inputField.placeholder = total;
+    }
+
+    displayValue = total;
+    
 }
 
 
