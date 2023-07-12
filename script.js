@@ -8,30 +8,48 @@ numKeys.forEach(function(numKey) {
 })
 //let's set the value for display
 let displayValue = "";
+let decimalToggle = false;
 
 function detect() {
 
     if (this.innerText === "=") {
         displayValue += this.innerText;
         inputField.placeholder = displayValue;
+        decimalToggle = false;
         disassemble();
 
     } else if (this.innerText === "C") {
 
         displayValue = "";
         inputField.placeholder = 0;
+        decimalToggle = false;
     
     } else if (this.innerText === "+/-") {
         console.log(displayValue);
+        displayValue = inputField.placeholder * -1;
+        inputField.placeholder = displayValue;
+        
+        
 
     } else if (this.innerText === ".") {
         console.log(displayValue);
+        decimalToggle = true;
     }
     
     else {
 
-        displayValue += this.innerText;
-        inputField.placeholder = displayValue;
+        if (decimalToggle === false) {
+            console.log(displayValue);
+            displayValue += this.innerText;
+            inputField.placeholder = displayValue;
+            
+        } else {
+            console.log("0."+this.innerText);
+            displayValue += "." + this.innerText;
+            inputField.placeholder = displayValue;
+            decimalToggle = false;
+        }
+        
     }
 
         
@@ -39,9 +57,9 @@ function detect() {
 
 function disassemble() {
 
-    console.log(displayValue);
+    console.log("This is " + displayValue);
 
-    const operatorsList = ["/","*","-","+","="];
+    const operatorsList = ["/","*","-","+","=","."];
     let disasembleValue = displayValue.split("");
     let temp = "";
     let disassembleList = [];
@@ -62,32 +80,70 @@ function disassemble() {
 
 }
 
+
+
+function handleDecimal(disassembleList){
+
+    let decimalNumList = [];
+    let decimalFlag = false;
+
+    console.log('This is to handle decimals' + disassembleList);
+    for (const value of disassembleList) {
+        if (value === '.') {
+            console.log("hooo!");
+            decimalFlag = true;
+        } else {
+
+            if (decimalFlag === true) {
+                decimalNumList[decimalNumList.length-1] = 
+                (parseFloat(decimalNumList[decimalNumList.length-1]) + parseFloat("0." + value)).toString();
+                decimalFlag = false;
+    
+            } else {
+                decimalNumList.push(value);
+                console.log('The type of this is ' + typeof(value))
+            }
+
+        }
+        
+    }
+
+    return decimalNumList;
+
+}
+
+
+
+
+
 function calculate(disassembleList) {
 
+    const decimalList = handleDecimal(disassembleList);
+
     const operatorsList = ["/","*","-","+"];
-    console.log(disassembleList);
+    console.log("This is what I got" + decimalList);
     let total = 0;
     let operator = "";
     
-    for (const number of disassembleList) {
+    for (const number of decimalList) {
 
         //if there's no operator and it's a number then make it parseInt and add it to total
         if (Number.isInteger(parseInt(number))){
 
             if (operator === "") {
-                total = parseInt(number);
+                total = parseFloat(number);
             }
             else if (operator === "+") {
-                total += parseInt(number);
+                total += parseFloat(number);
             }
             else if (operator === "-") {
-                total -= parseInt(number);
+                total -= parseFloat(number);
             }
             else if (operator === "*") {
-                total *= parseInt(number);
+                total *= parseFloat(number);
             }
             else if (operator === "/") {
-                total /= parseInt(number);
+                total /= parseFloat(number);
             }
 
             
